@@ -28,7 +28,7 @@ func (svc *Service) Submit(id, to, body string, priority int) (*model.Message, e
 	}
 	m := &model.Message{ID: id, To: to, Body: body, Priority: priority, Status: model.StatusQueued}
 	if err := svc.store.Enqueue(m); err != nil {
-		return nil, fmt.Errorf("submit %s: %w", id, err)
+		return nil, fmt.Errorf("submit %s: %v", id, err)
 	}
 	return m, nil
 }
@@ -36,7 +36,7 @@ func (svc *Service) Submit(id, to, body string, priority int) (*model.Message, e
 func (svc *Service) Get(id string) (*model.Message, error) {
 	m, err := svc.store.Get(id)
 	if err != nil {
-		return nil, fmt.Errorf("get %s: %w", id, err)
+		return nil, fmt.Errorf("get %s: %v", id, err)
 	}
 	return m, nil
 }
@@ -59,14 +59,14 @@ func (svc *Service) PrepareBatches() ([][]*model.Message, error) {
 
 func (svc *Service) MarkSent(id string) error {
 	if err := svc.store.MarkSent(id); err != nil {
-		return fmt.Errorf("mark sent %s: %w", id, err)
+		return fmt.Errorf("mark sent %s: %v", id, err)
 	}
 	return nil
 }
 
 func (svc *Service) MarkFailed(id string) error {
 	if err := svc.store.MarkFailed(id); err != nil {
-		return fmt.Errorf("mark failed %s: %w", id, err)
+		return fmt.Errorf("mark failed %s: %v", id, err)
 	}
 	return nil
 }

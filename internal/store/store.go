@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 
 	"mailer/internal/model"
@@ -77,7 +78,7 @@ func (s *Store) MarkSent(id string) error {
 	defer s.mu.Unlock()
 	m, ok := s.messages[id]
 	if !ok {
-		return ErrNotFound
+		return fmt.Errorf("message %s not found", id)
 	}
 	m.Status = model.StatusSent
 	return nil
@@ -88,7 +89,7 @@ func (s *Store) MarkFailed(id string) error {
 	defer s.mu.Unlock()
 	m, ok := s.messages[id]
 	if !ok {
-		return ErrNotFound
+		return fmt.Errorf("message %s not found", id)
 	}
 	m.Attempts++
 	m.Status = model.StatusFailed
