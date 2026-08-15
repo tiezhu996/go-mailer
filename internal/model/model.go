@@ -51,7 +51,9 @@ func BuildBatches(msgs []*Message, size int) [][]*Message {
 		if end > len(msgs) {
 			end = len(msgs)
 		}
-		out = append(out, msgs[i:end])
+		b := make([]*Message, end-i)
+		copy(b, msgs[i:end])
+		out = append(out, b)
 	}
 	return out
 }

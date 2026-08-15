@@ -1,0 +1,2 @@
+# 本地项目来源（出题人私有，勿放入 env/项目目录/交付物）
+/Users/gaobo/repositories/gitlab/评审项目/bug-go项目标注/0-1-projects/mailer
