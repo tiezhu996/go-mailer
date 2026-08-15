@@ -1,5 +1,7 @@
 package model
 
+import "sort"
+
 type Status string
 
 const (
@@ -27,20 +29,14 @@ type Summary struct {
 // HigherPriority 报告 a 是否应排在 b 之前（先按 Priority，再按 ID）。
 func HigherPriority(a, b *Message) bool {
 	if a.Priority != b.Priority {
-		return a.Priority > b.Priority
+		return a.Priority < b.Priority
 	}
-	return a.ID > b.ID
+	return a.ID < b.ID
 }
 
 // SortByPriority 原地按优先级排序，返回传入的切片。
 func SortByPriority(msgs []*Message) []*Message {
-	for i := 0; i < len(msgs); i++ {
-		for j := i + 1; j < len(msgs); j++ {
-			if !HigherPriority(msgs[i], msgs[j]) {
-				msgs[i], msgs[j] = msgs[j], msgs[i]
-			}
-		}
-	}
+	sort.SliceStable(msgs, func(i, j int) bool { return HigherPriority(msgs[i], msgs[j]) })
 	return msgs
 }
 
