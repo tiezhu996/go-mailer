@@ -90,6 +90,10 @@ func (p *Pool) Run(ctx context.Context) model.Summary {
 func (p *Pool) retry(m *model.Message, sum *model.Summary) {
 	for i := 0; i < p.retries; i++ {
 		if err := p.disp.Send(context.Background(), m); err == nil {
+			if err := p.store.MarkSent(m.ID); err != nil {
+				sum.Skipped++
+				return
+			}
 			sum.Sent++
 			return
 		}

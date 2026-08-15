@@ -62,5 +62,6 @@ func BuildBatches(msgs []*Message, size int) [][]*Message {
 func MergeSummary(dst Summary, src Summary) Summary {
 	dst.Sent += src.Sent
 	dst.Failed += src.Failed
+	dst.Skipped += src.Skipped
 	return dst
 }
