@@ -61,7 +61,7 @@ func (s *Store) Pending() []*model.Message {
 			out = append(out, m)
 		}
 	}
-	return model.SortByPriority(out)
+	return out
 }
 
 func (s *Store) PendingIDs() []string {
