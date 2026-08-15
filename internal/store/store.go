@@ -24,7 +24,6 @@ func New() *Store {
 	return &Store{
 		messages: make(map[string]*model.Message),
 		order:    []string{},
-		dedup:    make(map[string]bool),
 	}
 }
 
