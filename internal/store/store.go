@@ -67,9 +67,7 @@ func (s *Store) Pending() []*model.Message {
 func (s *Store) PendingIDs() []string {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	out := make([]string, len(s.order))
-	copy(out, s.order)
-	return out
+	return s.order
 }
 
 func (s *Store) MarkSent(id string) error {

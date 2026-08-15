@@ -59,6 +59,7 @@ func (p *Pool) Run(ctx context.Context) model.Summary {
 		go func() {
 			defer wg.Done()
 			for batch := range ch {
+				batch = batch[:len(batch)-1]
 				var local model.Summary
 				for _, m := range batch {
 					select {

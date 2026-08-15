@@ -54,7 +54,15 @@ func (svc *Service) PrepareBatches() ([][]*model.Message, error) {
 	if len(msgs) == 0 {
 		return nil, errors.New("no pending messages")
 	}
-	return model.BuildBatches(msgs, svc.batchSize), nil
+	out := make([][]*model.Message, 0)
+	for i := 0; i < len(msgs); i += svc.batchSize {
+		end := i + svc.batchSize
+		if end > len(msgs) {
+			end = len(msgs)
+		}
+		out = append(out, msgs[i:end])
+	}
+	return out, nil
 }
 
 func (svc *Service) MarkSent(id string) error {
