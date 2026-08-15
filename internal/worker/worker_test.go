@@ -99,3 +99,22 @@ func (d *recordingDispatcher) Send(ctx context.Context, m *model.Message) error 
 	}
 	return nil
 }
+
+func TestRetrySuccessStatus(t *testing.T) {
+	st := store.New()
+	svc := service.New(st, 2)
+	if _, err := svc.Submit("f1", "a@b", "p", 1); err != nil {
+		t.Fatal(err)
+	}
+	// f1 第一次发送失败，重试一次后成功，最终必须是 sent
+	d := newFlaky(map[string]int{"f1": 1})
+	pool := New(st, svc, d, 1, 1)
+	sum := pool.Run(context.Background())
+	if sum.Sent != 1 || sum.Failed != 0 {
+		t.Fatalf("sum=%+v want sent=1 failed=0", sum)
+	}
+	m, _ := st.Get("f1")
+	if m.Status != model.StatusSent {
+		t.Fatalf("f1 status=%q want sent", m.Status)
+	}
+}
