@@ -25,11 +25,12 @@ type Summary struct {
 }
 
 // HigherPriority 报告 a 是否应排在 b 之前（先按 Priority，再按 ID）。
+// Priority 数值越小优先级越高，故先排较小者；Priority 相同时按 ID 升序。
 func HigherPriority(a, b *Message) bool {
 	if a.Priority != b.Priority {
-		return a.Priority > b.Priority
+		return a.Priority < b.Priority
 	}
-	return a.ID > b.ID
+	return a.ID < b.ID
 }
 
 // SortByPriority 原地按优先级排序，返回传入的切片。

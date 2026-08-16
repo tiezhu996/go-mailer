@@ -39,6 +39,7 @@ func (p *Pool) Run(ctx context.Context) model.Summary {
 
 	var wg sync.WaitGroup
 	ch := make(chan []*model.Message, len(batches))
+	results := make(chan model.Summary, len(batches))
 
 	go func() {
 		defer close(ch)
@@ -51,11 +52,9 @@ func (p *Pool) Run(ctx context.Context) model.Summary {
 		}
 	}()
 
-	var sum model.Summary
-
 	for i := 0; i < p.workers; i++ {
+		wg.Add(1)
 		go func() {
-			wg.Add(1)
 			defer wg.Done()
 			for batch := range ch {
 				var local model.Summary
@@ -70,12 +69,20 @@ func (p *Pool) Run(ctx context.Context) model.Summary {
 					}
 					local.Sent++
 				}
-				sum = model.MergeSummary(sum, local)
+				results <- local
 			}
 		}()
 	}
 
-	wg.Wait()
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	var sum model.Summary
+	for s := range results {
+		sum = model.MergeSummary(sum, s)
+	}
 	return sum
 }
 
