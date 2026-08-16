@@ -59,14 +59,14 @@ func (svc *Service) PrepareBatches() ([][]*model.Message, error) {
 
 func (svc *Service) MarkSent(id string) error {
 	if err := svc.store.MarkSent(id); err != nil {
-		return fmt.Errorf("mark sent %s: %v", id, err)
+		return fmt.Errorf("mark sent %s: %w", id, err)
 	}
 	return nil
 }
 
 func (svc *Service) MarkFailed(id string) error {
 	if err := svc.store.MarkFailed(id); err != nil {
-		return fmt.Errorf("mark failed %s: %v", id, err)
+		return fmt.Errorf("mark failed %s: %w", id, err)
 	}
 	return nil
 }
