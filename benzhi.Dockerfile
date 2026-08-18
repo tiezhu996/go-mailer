@@ -1,10 +1,10 @@
-# 评测用镜像：保留完整 Go 工具链，依赖构建期预下载。
+# Evaluation image for the repository's real one-shot CLI entrypoint.
 FROM golang:1.22
 WORKDIR /app
 COPY go.mod ./
 COPY . .
-RUN go build ./...
-CMD ["bash"]
+RUN go build -o /usr/local/bin/mailer ./cmd/mailer
+CMD ["/usr/local/bin/mailer"]
 
-# 多架构交叉构建示例（如需交付双架构镜像）：
+# Multi-architecture delivery example:
 # docker buildx build --platform linux/arm64,linux/amd64 -f benzhi.Dockerfile -t <image> .
